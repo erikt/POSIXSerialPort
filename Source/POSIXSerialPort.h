@@ -28,12 +28,12 @@ typedef struct DataSegmentS {
 #define DEFAULT_READ_BLOCKTIME_MS 10
 
 @interface POSIXSerialPort : NSObject
-+ (nullable POSIXSerialPort *)serialPortWithPath:(NSString *)devicePath baudRate:(int)br;
-+ (nullable POSIXSerialPort *)serialPortWithPath:(NSString *)devicePath baudRate:(int)br readChunk:(size_t)rc readBlockMs:(float)rbms;
-- (nullable instancetype)initWithPath:(NSString *)devicePath;
++ (nullable POSIXSerialPort *)serialPortWithPath:(NSString *_Nonnull)devicePath baudRate:(int)br;
++ (nullable POSIXSerialPort *)serialPortWithPath:(NSString *_Nonnull)devicePath baudRate:(int)br readChunk:(size_t)rc readBlockMs:(float)rbms;
+- (nullable instancetype)initWithPath:(NSString *_Nonnull)devicePath;
 - (void)open;
 - (void)close;
-- (void)sendData:(NSData *)data;
+- (void)sendData:(NSData *_Nonnull)data;
 @property (nonatomic, weak, nullable) id<POSIXSerialPortDelegate> delegate;
 @property (readonly, getter = isOpen) BOOL open;
 @property (copy, readonly) NSString *path;
@@ -41,10 +41,10 @@ typedef struct DataSegmentS {
 
 @protocol POSIXSerialPortDelegate <NSObject>
 @required
-- (void)serialPort:(POSIXSerialPort *)serialPort didReceiveData:(NSData *)data;
+- (void)serialPort:(POSIXSerialPort *_Nonnull)serialPort didReceiveData:(NSData *_Nonnull)data;
 @optional
-- (DataSegment)serialPort:(POSIXSerialPort *)serialPort nextDataSegmentValidIn:(NSData *)data;
-- (void)serialPort:(POSIXSerialPort *)serialPort didEncounterError:(NSError *)error;
-- (void)serialPortWasOpened:(POSIXSerialPort *)serialPort;
-- (void)serialPortWasClosed:(POSIXSerialPort *)serialPort;
+- (DataSegment)serialPort:(POSIXSerialPort *_Nonnull)serialPort nextDataSegmentValidIn:(NSData *_Nonnull)data;
+- (void)serialPort:(POSIXSerialPort *_Nonnull)serialPort didEncounterError:(NSError *_Nonnull)error;
+- (void)serialPortWasOpened:(POSIXSerialPort *_Nonnull)serialPort;
+- (void)serialPortWasClosed:(POSIXSerialPort *_Nonnull)serialPort;
 @end
