@@ -5,6 +5,8 @@
 //  Created by kpishere on 2020-07-17.
 //  Copyright © 2020  GPL-2.0 License
 //
+#import <Foundation/Foundation.h>
+
 @protocol POSIXSerialPortDelegate;
 
 @class POSIXSerialRequest;
