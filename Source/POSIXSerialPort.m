@@ -385,42 +385,47 @@ static __strong NSMutableArray *allSerialPorts;
         dispatch_data_t refRegion = dispatch_data_create_map(self._data,nil,nil);        
         dispatch_data_apply(refRegion, ^bool(dispatch_data_t region, size_t offset, const void *buffer, size_t size) {
             
-            NSData *bufferRef = [NSData dataWithBytesNoCopy:(void *)(buffer+offset) length:size freeWhenDone:NO];
-            
+//            NSData *bufferRef = [NSData dataWithBytesNoCopy:(void *)(buffer+offset) length:size freeWhenDone:NO];
+			NSData *bufferRef = [NSData dataWithBytes:(void *)(buffer+offset) length:size];
+
             dispatch_async(dispatch_get_main_queue(), ^(void){
             
                 DataSegment ds = {offset,size};
             
-                // Allow delegate to adjust for a valid data segment
-                if ([self.delegate respondsToSelector:@selector(serialPort:nextDataSegmentValidIn:)])
-                {
-                    ds = [self.delegate serialPort:self nextDataSegmentValidIn:bufferRef];
-                }
+//                // Allow delegate to adjust for a valid data segment
+//                if ([self.delegate respondsToSelector:@selector(serialPort:nextDataSegmentValidIn:)])
+//                {
+//                    ds = [self.delegate serialPort:self nextDataSegmentValidIn:bufferRef];
+//                }
             
                 // Call delegate to consume data with reference to valid segment
                 // -- delegate must copy data if it is to be retained
-                NSData *packetRef = [NSData dataWithBytesNoCopy:(void *)(buffer+ds.offset) length:ds.size freeWhenDone:NO];
+//                NSData *packetRef = [NSData dataWithBytesNoCopy:(void *)(buffer+ds.offset) length:ds.size freeWhenDone:NO];
             
-                dispatch_async(dispatch_get_main_queue(), ^(void){
+//                dispatch_async(dispatch_get_main_queue(), ^(void){
                     if ([self.delegate respondsToSelector:@selector(serialPort:didReceiveData:)]
                         && ds.size > 0 )
                     {
-                        [self.delegate serialPort:self didReceiveData:packetRef];
+//                        [self.delegate serialPort:self didReceiveData:packetRef];
+						[self.delegate serialPort:self didReceiveData:bufferRef];
                     }
                     
                     // Update data reference, removing consumed data
-                    dispatch_async(dispatch_get_main_queue(), ^(void){
-                        if(ds.offset != offset || ds.size != size) {
-                            self._data = dispatch_data_create_map(dispatch_data_create_subrange(region, offset+ds.size+(ds.offset-offset)
-                                , size - (ds.size + (ds.offset-offset))),nil,nil);
-                        } else {
-                            self._data = nil; // Release the data
-                        }
-                    });
-                });
+//                    dispatch_async(dispatch_get_main_queue(), ^(void){
+//                        if(ds.offset != offset || ds.size != size) {
+//                            self._data = dispatch_data_create_map(dispatch_data_create_subrange(region, offset+ds.size+(ds.offset-offset)
+//                                , size - (ds.size + (ds.offset-offset))),nil,nil);
+//                        } else {
+//                            self._data = nil; // Release the data
+//                        }
+//                    });
+//                });
             });
+			
             return true;
         });
+		
+		self._data = nil; // Release the data
     }
 }
 - (void)sendData:(NSData *)data;

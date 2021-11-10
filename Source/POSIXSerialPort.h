@@ -36,14 +36,14 @@ typedef struct DataSegmentS {
 - (void)sendData:(NSData *_Nonnull)data;
 @property (nonatomic, weak, nullable) id<POSIXSerialPortDelegate> delegate;
 @property (readonly, getter = isOpen) BOOL open;
-@property (copy, readonly) NSString *path;
+@property (copy, readonly) NSString * _Nonnull path;
 @end
 
 @protocol POSIXSerialPortDelegate <NSObject>
 @required
 - (void)serialPort:(POSIXSerialPort *_Nonnull)serialPort didReceiveData:(NSData *_Nonnull)data;
 @optional
-- (DataSegment)serialPort:(POSIXSerialPort *_Nonnull)serialPort nextDataSegmentValidIn:(NSData *_Nonnull)data;
+//- (DataSegment)serialPort:(POSIXSerialPort *_Nonnull)serialPort nextDataSegmentValidIn:(NSData *_Nonnull)data;
 - (void)serialPort:(POSIXSerialPort *_Nonnull)serialPort didEncounterError:(NSError *_Nonnull)error;
 - (void)serialPortWasOpened:(POSIXSerialPort *_Nonnull)serialPort;
 - (void)serialPortWasClosed:(POSIXSerialPort *_Nonnull)serialPort;
